@@ -1,23 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import AddListing from './components/AddListing';
+import ListingDetails from './components/ListingDetails';
+import ListingsPage from './components/ListingsPage';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Com|Unity</h1>
       </header>
+      <Router>
+        <Routes>
+          <Route path="/" element={<ListingsPage />} />
+          <Route path="/add" element={<AddListing />} />
+          <Route path="/listing/:id" element={<ListingDetails />} /> 
+        </Routes>
+      </Router>
     </div>
   );
 }
