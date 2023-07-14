@@ -20,8 +20,9 @@ const ListingsPage = () => {
   return (
     <div>
       {listings.map(listing => (
-        <div key={listing.id}>
+        <div className="card" key={listing.id}>
           <h2>{listing.address}</h2>
+          <img src={listing.photo} alt="feature image"></img>
           <Link to={`/listing/${listing.id}`}>View Details</Link>
         </div>
       ))}
