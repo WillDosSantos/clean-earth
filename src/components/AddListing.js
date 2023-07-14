@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { db, storage, firebase } from '../firebase'; // import the exports from the previous file
+import React, { useState, useEffect } from 'react';
+import { db, storage, firebase, auth } from '../firebase'; // import the exports from the previous file
+import { onAuthStateChanged } from 'firebase/auth';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'; // new imports
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { Link } from 'react-router-dom';
@@ -11,13 +12,28 @@ const AddListing = () => {
   const [details, setDetails] = useState('');
   const [contribution, setContribution] = useState('');
   const [newListingId, setNewListingId] = useState(null);
+  const [user, setUser] = useState(null);
   const onFileChange = e => {
     setPhoto(e.target.files[0]);
   };
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+}, []);
+
+
   const onSubmit = async e => {
     e.preventDefault();
   
+    if (!user) {
+      alert("You must be logged in to add a listing.");
+      return;
+    }
+
     // Upload the photo to Firebase Storage and get the download URL
     let storageRef = ref(storage, `images/${photo.name}`);
     let uploadTask = uploadBytesResumable(storageRef, photo);
@@ -43,6 +59,9 @@ const AddListing = () => {
             details,
             contribution,
             createdAt: serverTimestamp(),
+            userUID: user.uid,
+            userEmail: user.email,
+            timestamp: serverTimestamp(),
           }).then((docRef) => {
             console.log("Document successfully written!");
             console.log("New listing ID: ", docRef.id);  // Log the ID of the new listing
@@ -56,6 +75,8 @@ const AddListing = () => {
       }
     );
   };
+
+  
 
   return (
     <div>

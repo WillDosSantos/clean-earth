@@ -12,7 +12,7 @@ function App() {
     <div className="App">
       <Router>
       <header className="App-header">
-        <h1>Com|Unity</h1>
+        <h1>cleanearth</h1>
       </header>
         <Link to="/add">Add Listing</Link>
           <Link to="/signup">Sign Up</Link>
